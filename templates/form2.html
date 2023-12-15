@@ -1,0 +1,21 @@
+{% block contenido %}
+
+<h1>Formulario de Login</h1>
+
+<form action="" method="POST" novalidate>
+    {{ formi.hidden_tag() }} <br>
+    {{ formi.username.label}}
+    {{ formi.username(size=30) }} <br>
+    {% for error in formi.username.errors %}
+    <span style="color: red;">{{ error }}</span><br>
+    {% endfor %}
+    {{ formi.password.label}}
+    {{ formi.password(size=30) }} <br>
+    {% for error in formi.password.errors %}
+    <span style="color: red;">{{ error }}</span><br>
+    {% endfor %}
+    {{ formi.remember(size=30) }} <br>
+    <button type="submit">Loguearse</button>
+</form>
+
+{% endblock %}

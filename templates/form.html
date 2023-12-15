@@ -1,0 +1,22 @@
+<form action="dinamic" method="POST">
+    <label for="url">Escribe una URL:</label>
+    <input type="url" name="url" value="">
+    <label for="code">Escribe un nombre:</label>
+    <input type="text" name="code">
+    <input type="submit" value="Enviar">
+</form>
+
+{% with messages = get_flashed_messages() %}
+    {% for message in messages %}
+        {{ message }}
+    {% endfor %}
+{% endwith %}
+
+
+<form action="dinamic" method="POST" enctype="multipart/form-data">
+    <label for="file">Selecciona un archivo: </label>
+    <input type="file" name="file" value="">
+    <label for="code">Escribe un nombre:</label>
+    <input type="text" name="code">
+    <input type="submit" value="Enviar">
+</form>

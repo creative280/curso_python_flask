@@ -1,0 +1,16 @@
+<style>
+    .alert-success{
+        color: green;
+    }
+</style>
+
+<h1>La URL es: {{ url }}</h1>
+
+<h2>Hola, {{ nombre }}</h2>
+
+
+{% with messages = get_flashed_messages(with_categories=true) %}
+    {% for category,message in messages %}
+        <h3 class="alert-{{ category }}">{{ message }}</h3>
+    {% endfor %}
+{% endwith %}

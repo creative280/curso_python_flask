@@ -1,0 +1,25 @@
+{% extends "bootstrap/base.html" %}
+
+{% block title %}
+    
+{% endblock %}
+
+
+{% block content %}
+<h1>{{ title }}</h1>
+<ul>
+{% for user in users %}
+    <li>{{user.username}}</li>
+{% endfor %}
+</ul>
+
+<ul>
+{% for user in users %}
+    <li>
+        {{user.username}}
+        <a href="/update/{{user.id}}"> Actualizar</a>
+        <a href="/delete/{{user.id}}"> Eliminar</a>
+    </li>
+{% endfor %}
+</ul>
+{% endblock content %}
