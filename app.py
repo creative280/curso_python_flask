@@ -18,7 +18,7 @@ db.init_app(app)
 
 
 @app.route('/home', methods=['GET', 'POST'])
-@app.route('/')
+@app.route('/', methods=['GET', 'POST'])
 def home():
     login = LoginForm()
 
@@ -67,7 +67,7 @@ def delte(id):
 
 
 @app.route('/registro', methods=['GET', 'POST'])
-def registro():
+def register():
     registro = CreateUserForm()
 
     if registro.validate_on_submit():

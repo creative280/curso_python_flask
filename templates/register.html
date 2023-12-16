@@ -1,16 +1,28 @@
-{% block contenido %}
+{% extends "bootstrap/base.html" %}
+{% from 'bootstrap/form.html' import render_form %}
+
+{%- block navbar -%}
+{% include "navbar-login.html" %}
+{% endblock navbar %}
+
+{% block content %}
 
 <h1>Formulario de registro</h1>
 
-<form action="" method="POST" novalidate>
-    {{ regis.hidden_tag() }} <br>
-    {{ regis.email.label }}
-    {{ regis.email(size=30) }} <br>
-    {{ regis.username.label }}
-    {{ regis.username(size=30) }} <br>
-    {{ regis.password.label }}
-    {{ regis.password(size=30) }} <br>    
-    <button type="submit">Registrarse</button>
-</form>
+<!-- 
+    <form action="" method="POST" novalidate>
+        {{ regis.hidden_tag() }} <br>
+        {{ regis.email.label }}
+        {{ regis.email(size=30) }} <br>
+        {{ regis.username.label }}
+        {{ regis.username(size=30) }} <br>
+        {{ regis.password.label }}
+        {{ regis.password(size=30) }} <br>    
+        <button type="submit">Registrarse</button>
+    </form> 
+-->
 
-{% endblock %}
+
+{{ render_form(regis, novalidate=True) }}
+
+{% endblock content %}

@@ -1,21 +1,32 @@
-{% block contenido %}
+{% extends "bootstrap/base.html" %}
+{% from 'bootstrap4/form.html' import render_form %}
+
+{% block content %}
 
 <h1>Formulario de Login</h1>
 
-<form action="" method="POST" novalidate>
-    {{ formi.hidden_tag() }} <br>
-    {{ formi.username.label}}
-    {{ formi.username(size=30) }} <br>
+<!-- 
+    Importación
+    {% from 'bootstrap4/form.html' import render_field %}
+
+
+    Codigo como crear un formulario usando render_file de bootstrap, MACRO, renderiza de forma mas rapida mis objetos desde bootstrap
+
+    <form action="" method="POST" novalidate>
+    {{ formi.hidden_tag() }}
+    {{ formi.csrf_token() }}
+    {{ render_field(formi.username) }} <br>
     {% for error in formi.username.errors %}
     <span style="color: red;">{{ error }}</span><br>
     {% endfor %}
-    {{ formi.password.label}}
-    {{ formi.password(size=30) }} <br>
-    {% for error in formi.password.errors %}
+    {{ render_field(formi.password) }} <br>
+    Como importar mensajes de error usando las propiedades de WT-Forms {% for error in formi.password.errors %}
     <span style="color: red;">{{ error }}</span><br>
     {% endfor %}
-    {{ formi.remember(size=30) }} <br>
-    <button type="submit">Loguearse</button>
-</form>
+    {{ render_field(formi.remember) }} <br>
+    {{ render_field(formi.enviar) }}
+</form> -->
 
-{% endblock %}
+{{ render_form(formi, novalidate=True) }}
+
+{% endblock content %}

@@ -1,4 +1,9 @@
+{% extends "bootstrap/base.html" %}
+
+
+{% block content %}
 <form action="/update/{{user_updt.id}}" method="POST">
     <input type="text" name="name" value="{{user_updt.username}}">
     <input type="submit" value="Actualizar">
 </form>
+{% endblock content %}
