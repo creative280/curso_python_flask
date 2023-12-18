@@ -7,7 +7,7 @@ class LoginForm(FlaskForm):
     username = StringField('username', validators=[InputRequired(message='Este campo no puede estar vacio'), 
                                                    Length(min=4, max=16, message='El nombre de usuario debe de tener entre %(min)d y %(max)d caracteres')])
     password = PasswordField('password', validators=[InputRequired(message='Este campo no puede estar vacio'),
-                                                    Length(min=8, max=16, message='La contraseña tiene que tener entre %(min)d y %(max)d caracteres')])
+                                                    Length(min=6, max=16, message='La contraseña tiene que tener entre %(min)d y %(max)d caracteres')])
     remember = BooleanField('remember me')
     enviar = SubmitField('Inicia Sesión')
 

@@ -1,9 +1,10 @@
-{% extends "bootstrap/base.html" %}
-{% from 'bootstrap/form.html' import render_form %}
+{% extends "base.html" %}
+{% from 'bootstrap4/form.html' import render_form %}
 
-{%- block navbar -%}
-{% include "navbar-login.html" %}
-{% endblock navbar %}
+{% block styles %}
+{{ super() }}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/main.css')}}">
+{% endblock styles %}
 
 {% block content %}
 

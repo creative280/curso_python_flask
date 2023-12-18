@@ -5,7 +5,8 @@ from werkzeug.utils import secure_filename
 from forms import LoginForm, CreateUserForm
 from wtforms.validators import DataRequired, InputRequired, Email, Length
 from models import db, User
-from flask_bootstrap import Bootstrap
+from flask_bootstrap import Bootstrap4
+from flask_login import LoginManager, login_user, login_required, logout_user
 
 app = Flask(__name__)
 
@@ -13,9 +14,15 @@ app.secret_key = '4l3j0T190516'
 
 app.config["SQLALCHEMY_DATABASE_URI"] = "mysql://root:123456@localhost/flask_project"
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
-bootstrap = Bootstrap(app)
-db.init_app(app)
+bootstrap = Bootstrap4(app)
+loginMgr = LoginManager(app)
 
+
+@loginMgr.user_loader
+def load_user(id):
+    return db.session.query(User).get(int(id))
+
+db.init_app(app)
 
 @app.route('/home', methods=['GET', 'POST'])
 @app.route('/', methods=['GET', 'POST'])
@@ -25,7 +32,8 @@ def home():
     if login.validate_on_submit():
         user = User.query.filter_by(username=login.username.data).first()
         if user:
-            if user.password == login.password.data:
+            if user.check_password(login.password.data):
+                login_user(user, remember=login.remember.data)
                 return '<h2>Login Correcto</h2>'
             
         return '<h2>Usuario o contraseña invalido</h2>'
@@ -34,7 +42,13 @@ def home():
     return render_template('form2.html', formi=login)
 
 
+@app.route('/logout')
+def logout():
+    logout_user()
+    return redirect(url_for('home'))
+
 @app.route('/users')
+@login_required
 def users():
     title = 'Lista de usuarios'
     users = User.query.order_by(User.username.desc())
@@ -72,7 +86,8 @@ def register():
 
     if registro.validate_on_submit():
         
-        new_user = User(username=registro.username.data, email=registro.email.data, password=registro.password.data)
+        new_user = User(username=registro.username.data, email=registro.email.data)
+        new_user.set_password(registro.password.data)
         db.session.add(new_user)
         db.session.commit()
 
@@ -139,11 +154,26 @@ def dinamic():
     
 @app.route('/<string:code>')
 def redirect_to(code):
-        if os.path.exists('urls.json'):
-            with open('urls.json') as url_file:
+    if os.path.exists('urls.json'):
+        with open('urls.json') as url_file:
+            try:
                 urls = json.load(url_file)
-                if code in urls.keys():
-                    return redirect(url_for('static', filename='uploads/' + urls[code]['file']))    
+                if code in urls:
+                    file_path = urls[code].get('file')
+                    if file_path:
+                        return redirect(url_for('static', filename='uploads/' + file_path))
+                    else:
+                        # El código está en el archivo JSON, pero el campo 'file' no está presente
+                        return render_template('error.html', error_message='URL no válida')
+                else:
+                    # El código no se encuentra en el archivo JSON
+                    return render_template('error.html', error_message='Código no encontrado')
+            except json.JSONDecodeError:
+                # El archivo JSON no está en el formato esperado
+                return render_template('error.html', error_message='Error en el formato del archivo JSON')
+    else:
+        # El archivo JSON no existe
+        return render_template('error.html', error_message='Archivo de URL no encontrado')
 
 
 

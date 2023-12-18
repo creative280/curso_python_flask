@@ -1,0 +1,8 @@
+.container{
+    max-width: 50%;
+    padding-top: 30px;
+}
+
+a.navbar-brand{
+    width: 180px;
+}
