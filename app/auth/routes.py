@@ -31,6 +31,13 @@ def dash():
     
     return render_template('dashboard.html', users=users, posts=posts)
 
+@auth.route('/post')
+def post():
+    
+    
+    return render_template('post.html')
+
+
 @auth.route('/logout')
 def logout():
     logout_user()
