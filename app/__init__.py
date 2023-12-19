@@ -8,6 +8,7 @@ from app.models import db, User
 from flask_bootstrap import Bootstrap4
 from flask_login import LoginManager, login_user, login_required, logout_user
 from dotenv import load_dotenv
+from flask_ckeditor import CKEditor
 
 
 load_dotenv('../.flaskenv')
@@ -20,14 +21,13 @@ app.config["SQLALCHEMY_DATABASE_URI"] = "mysql://root:123456@localhost/flask_pro
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 bootstrap = Bootstrap4(app)
 loginMgr = LoginManager(app)
-
+ckeditor = CKEditor(app)
 
 @loginMgr.user_loader
 def load_user(id):
     return db.session.query(User).get(int(id))
 
 db.init_app(app)
-
 
 # Iniciar la aplicación de Flask con DEBUG True
 if __name__ == '__main__':

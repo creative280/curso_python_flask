@@ -2,6 +2,7 @@ from flask import Flask
 from flask_wtf import FlaskForm
 from wtforms import StringField, PasswordField, BooleanField, SubmitField
 from wtforms.validators import DataRequired, InputRequired, Email, Length
+from flask_ckeditor import CKEditorField
 
 class LoginForm(FlaskForm):
     username = StringField('username', validators=[InputRequired(message='Este campo no puede estar vacio'), 
@@ -17,3 +18,7 @@ class CreateUserForm(FlaskForm):
     password = PasswordField('password', validators=[InputRequired(), Length(min=8, max=16)])
     enviar = SubmitField('Registrarse')
     
+class CreateNewPost(FlaskForm):
+    title = StringField('Titulo del Post', validators=[InputRequired(), Length(min=4, max=180)])
+    body = CKEditorField('Escribe el contenido', validators=[InputRequired(), Length(min=4, max=800)])
+    enviar = SubmitField('Publicar')

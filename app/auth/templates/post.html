@@ -1,1 +1,17 @@
-<h1>Crear Post</h1>
+{% extends 'base-admin.html' %}
+
+{% from 'bootstrap4/form.html' import render_form, render_field %}
+
+{% block styles %}
+{{ super() }}
+{% endblock styles %}
+
+{% block maincontent %}
+<div class="container-fluid">
+    {{ current_user.username }}
+
+    {{ render_form(post, novalidate=True) }}
+    {{ ckeditor.load() }}
+    {{ ckeditor.config(name='body') }}
+</div>
+{% endblock maincontent %}

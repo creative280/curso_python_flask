@@ -1,0 +1,25 @@
+{% extends 'base-admin.html' %}
+
+{% from 'bootstrap4/form.html' import render_form, render_field %}
+
+{% block styles %}
+{{ super() }}
+{% endblock styles %}
+
+{% block maincontent %}
+<div class="container-fluid">
+    <h1>Edición de Post</h1>
+    {{ current_user.username }}
+
+    <form action="/post/edit/{{ post_update.id }}" method="POST">
+        <input type="text" class="form-control" name="title" value="{{ post_update.title }}">
+
+        {{ ckeditor.create(value=post_update.body, name="body")}}
+        <!-- <input type="text" name="body" value="{{ post_update.body }}"> -->
+        <input type="submit" value="Actualizar" class="btn btn-success">
+        <button class="btn btn-secondary" type="button" onclick="history.back()">Cancelar</button>
+    </form>
+    {{ ckeditor.load() }}
+    {{ ckeditor.config(name='body') }}
+</div>
+{% endblock maincontent %}
