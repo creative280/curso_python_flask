@@ -10,7 +10,13 @@
 <div class="container-fluid">
     {{ current_user.username }}
 
-    {{ render_form(post, novalidate=True) }}
+    <form action="post" method="POST" novalidate>
+        {{ post.hidden_tag() }}
+        {{ render_field(post.title) }}
+        {{ render_field(post.body) }}
+        {{ render_field(post.enviar) }}
+    </form>
+
     {{ ckeditor.load() }}
     {{ ckeditor.config(name='body') }}
 </div>

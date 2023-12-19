@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, redirect, url_for, flash
+from flask import Flask, render_template, request, redirect, url_for, flash, send_from_directory
 import json
 import os.path
 from werkzeug.utils import secure_filename
@@ -6,7 +6,36 @@ from app.forms import LoginForm, CreateUserForm, CreateNewPost
 from app.models import db, User, Post
 from flask_login import LoginManager, login_user, login_required, logout_user, current_user
 from . import auth
+from flask_ckeditor import upload_fail, upload_success
 
+basedir = os.path.abspath(os.path.dirname(__file__))
+
+def create_app():
+    app = Flask(__name__)
+    with app.app_context():
+        p = app.config['UPLOADED_PATH'] = os.path.join(basedir, 'uploads')
+        return p
+
+@auth.route('/info')
+def get_info():
+    x = create_app()
+    return x
+
+@auth.route('/files/<path:filename>')
+def uploaded_files(filename):
+    path = create_app()
+    return send_from_directory(path, filename)
+
+@auth.route('/upload', methods=['POST'])
+def upload():
+    f = request.files.get('upload')
+    # Add more validations here
+    extension = f.filename.split('.')[-1].lower()
+    if extension not in ['jpg', 'gif', 'png', 'jpeg']:
+        return upload_fail(message='Image only!')
+    f.save(os.path.join(create_app(), f.filename))
+    url = url_for('auth.uploaded_files', filename=f.filename)
+    return upload_success(url, filename=f.filename)  # return upload_success call
 
 @auth.route('/', methods=['GET', 'POST'])
 def home():
@@ -127,3 +156,5 @@ def register():
         #return '<h1>' + registro.email.data + ' ' + registro.username.data + ' ' + registro.password.data + '</h1>'
     
     return render_template('register.html', regis=registro)
+
+

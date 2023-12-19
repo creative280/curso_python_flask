@@ -10,7 +10,6 @@ from flask_login import LoginManager, login_user, login_required, logout_user
 from dotenv import load_dotenv
 from flask_ckeditor import CKEditor
 
-
 load_dotenv('../.flaskenv')
 
 app = Flask(__name__)
@@ -21,6 +20,9 @@ app.config["SQLALCHEMY_DATABASE_URI"] = "mysql://root:123456@localhost/flask_pro
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 bootstrap = Bootstrap4(app)
 loginMgr = LoginManager(app)
+
+
+app.config['CKEDITOR_FILE_UPLOADER'] = 'auth.upload'
 ckeditor = CKEditor(app)
 
 @loginMgr.user_loader
