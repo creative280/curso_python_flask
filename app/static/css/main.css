@@ -6,3 +6,16 @@
 a.navbar-brand{
     width: 180px;
 }
+
+.profile-cover{
+    background-repeat: no-repeat;
+    background-position: top center;
+    background-size: cover;
+    height: 200px;
+    background-image: url('../../auth/static/assets/img/cover-home.jpg');
+}
+
+.the-user-gravatar{
+    margin-top: -8rem;
+    width: 10rem;
+}

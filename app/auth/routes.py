@@ -46,7 +46,7 @@ def home():
         if user:
             if user.check_password(login.password.data):
                 login_user(user, remember=login.remember.data)
-                return '<h2>Login Correcto</h2>'
+                return redirect('/dashboard')
             
         return '<h2>Usuario o contraseña invalido</h2>'
 
@@ -158,3 +158,10 @@ def register():
     return render_template('register.html', regis=registro)
 
 
+@auth.route('/user/<username>')
+@login_required
+def profile(username):
+    user = User.query.filter_by(username=username).first_or_404()
+    posts = Post.query.filter_by(author=user).all()
+    
+    return render_template('profile.html', user=user, posts=posts)

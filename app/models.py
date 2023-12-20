@@ -2,15 +2,21 @@ from flask_sqlalchemy import SQLAlchemy
 from werkzeug.security import generate_password_hash, check_password_hash
 from datetime import datetime
 from flask_login import UserMixin
+import urllib, hashlib
 
 db = SQLAlchemy()
 
 class User(UserMixin, db.Model):
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(80), unique=True, nullable=False)
+    
     email = db.Column(db.String(80), unique=True, nullable=False)
     password = db.Column(db.String(80))
     post = db.relationship('Post', backref ='author', lazy='dynamic')
+
+    def gravatar(self, size):
+        digest = hashlib.md5(self.email.lower().encode('utf-8')).hexdigest()
+        return f'https://www.gravatar.com/avatar/{ digest }?s={size}'
 
     def __repr__(self):
         return f'{self.id, self.username, self.email}'

@@ -1,0 +1,41 @@
+{% extends 'base-admin.html' %}
+
+{% block title %}Usuario{% endblock title %}
+
+{% block styles %}
+{{super()}}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/main.css')}}">
+{% endblock styles %}
+
+
+{% block maincontent %}
+<h1>Hola: {{ user.username }}</h1>
+<div class="row">
+    <div class="col-12 col-xl-8">
+        <div class="card border-light shadow-sm">
+            <div class="card-body">
+                <img src="{{ user.gravatar(128)}}" alt="" class="rounded">
+                {% for post in posts %}
+                <p>
+                    {{post.author.username }} escribio: <b>{{ post.title }}</b>
+                </p>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+    <div class="col-12 col-xl-4">
+        <div class="card shadow text-center mb-4">
+            <div class="profile-cover rounded-top">
+
+            </div>
+            <div class="card-body">
+                <img src="{{ user.gravatar(128)}}" alt="{{ user.username }}" class="rounded-circle the-user-gravatar">
+                <h4>{{ current_user.username }}</h4>
+                <h5 class="fw-bolder">{{ current_user.email }}</h5>
+                <h5 class="fw-lighter"><a href="{{ current_user.email }}">Post Escritos
+                        {{ current_user.post.count() }}</a></h5>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock maincontent %}

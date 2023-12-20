@@ -21,8 +21,23 @@
                 <button class="btn btn-outline-primary" type="submit">Search</button>
             </form>
             <ul class="nav navbar-nav navbar-right">
+                <!-- Imagen de usuario con dropdown -->
                 <li>
-                    <a href="{{ url_for('auth.logout') }}" class="btn btn-danger">Logout</a>
+                    <div class="dropdown no-arrow">
+                        <a class="dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown"
+                            aria-haspopup="true" aria-expanded="false">
+                            <img class="rounded-circle" src="{{ current_user.gravatar(40) }}" alt="author"
+                                srcset=""></a>
+
+                        <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in"
+                            aria-labelledby="dropdownMenuLink">
+                            <div class="dropdown-header">{{ current_user.username }}</div>
+                            <a href="{{ url_for('auth.profile', username=current_user.username) }}"
+                                class="dropdown-item">Editar Perfil</a>
+                            <div class="dropdown-divider"></div>
+                            <a href="{{ url_for('auth.logout') }}" class="btn btn-danger">Logout</a>
+                        </div>
+                    </div>
                 </li>
             </ul>
         </div>
