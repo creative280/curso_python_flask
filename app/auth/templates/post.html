@@ -10,10 +10,11 @@
 <div class="container-fluid">
     {{ current_user.username }}
 
-    <form action="post" method="POST" novalidate>
+    <form action="post" method="POST" novalidate enctype="multipart/form-data">
         {{ post.hidden_tag() }}
         {{ render_field(post.title) }}
         {{ render_field(post.body) }}
+        {{ render_field(post.thumb) }}
         {{ render_field(post.enviar) }}
     </form>
 

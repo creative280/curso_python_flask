@@ -1,6 +1,6 @@
 from flask import Flask
 from flask_wtf import FlaskForm
-from wtforms import StringField, PasswordField, BooleanField, SubmitField
+from wtforms import StringField, PasswordField, BooleanField, SubmitField, DateField, FileField
 from wtforms.validators import DataRequired, InputRequired, Email, Length
 from flask_ckeditor import CKEditorField
 
@@ -18,7 +18,17 @@ class CreateUserForm(FlaskForm):
     password = PasswordField('password', validators=[InputRequired(), Length(min=8, max=16)])
     enviar = SubmitField('Registrarse')
     
+class CompleteUserForm(CreateUserForm):
+    firstname = StringField('Nombre Completo', validators=[Length(min=4, max=50)])
+    lastname = StringField('Apellidos', validators=[Length(min=4, max=50)])
+    birth = DateField('Fecha Nacimiento', format='%Y-%m-%d')
+    address = StringField('Dirección', validators=[Length(min=4, max=90)])
+    number = StringField('Numero Telefono', validators=[Length(min=4, max=13)])
+    city = StringField('Ciudad', validators=[Length(min=4, max=13)])
+    update = SubmitField('Actualizar Información')
+    
 class CreateNewPost(FlaskForm):
     title = StringField('Titulo del Post', validators=[InputRequired(), Length(min=4, max=180)])
     body = CKEditorField('Escribe el contenido', validators=[InputRequired(), Length(min=4, max=800)])
+    thumb = FileField()
     enviar = SubmitField('Publicar')

@@ -9,7 +9,12 @@ db = SQLAlchemy()
 class User(UserMixin, db.Model):
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(80), unique=True, nullable=False)
-    
+    firstname = db.Column(db.String(120))
+    lastname = db.Column(db.String(120))
+    birth = db.Column(db.DateTime)
+    address = db.Column(db.String(120))
+    number = db.Column(db.String(80))
+    city = db.Column(db.String(120))
     email = db.Column(db.String(80), unique=True, nullable=False)
     password = db.Column(db.String(80))
     post = db.relationship('Post', backref ='author', lazy='dynamic')
@@ -33,6 +38,7 @@ class Post(db.Model):
     title = db.Column(db.String(120))
     body = db.Column(db.String(500))
     timestamp = db.Column(db.DateTime, index = True, default = datetime.now())
+    thumb = db.Column(db.String)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
 
     def __repr__(self):

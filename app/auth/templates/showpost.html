@@ -1,0 +1,13 @@
+{% extends 'base-admin.html' %}
+
+{% block styles %}
+{{ super() }}
+{% endblock styles %}
+
+
+{% block maincontent %}
+<h1>{{post3.title}}</h1>
+{{post3.body}}
+{{post3.thumb}}
+<img src="{{ url_for('auth.media_post', filename=post3.thumb) }}" alt="" srcset="">
+{% endblock maincontent %}
