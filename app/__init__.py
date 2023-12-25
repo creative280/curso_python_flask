@@ -9,6 +9,7 @@ from flask_bootstrap import Bootstrap4
 from flask_login import LoginManager, login_user, login_required, logout_user
 from dotenv import load_dotenv
 from flask_ckeditor import CKEditor
+from flask_mail import Mail
 
 load_dotenv('../.flaskenv')
 
@@ -24,6 +25,17 @@ loginMgr = LoginManager(app)
 
 app.config['CKEDITOR_FILE_UPLOADER'] = 'auth.upload'
 ckeditor = CKEditor(app)
+
+#Config de libreria Mail para enviar correos
+app.config['MAIL_SERVER'] = 'smtp.gmail.com'
+app.config['MAIL_PORT'] = 587  # Puerto para TLS
+app.config['MAIL_USE_TLS'] = True
+app.config['MAIL_USE_SSL'] = False
+app.config['MAIL_USERNAME'] = 'devats0516@gmail.com'
+app.config['MAIL_PASSWORD'] = 'qvog cdfj biwo katk'
+
+mail = Mail(app)
+
 
 @loginMgr.user_loader
 def load_user(id):

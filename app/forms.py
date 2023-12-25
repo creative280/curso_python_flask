@@ -1,7 +1,7 @@
 from flask import Flask
 from flask_wtf import FlaskForm
 from wtforms import StringField, PasswordField, BooleanField, SubmitField, DateField, FileField
-from wtforms.validators import DataRequired, InputRequired, Email, Length
+from wtforms.validators import DataRequired, InputRequired, Email, Length, EqualTo
 from flask_ckeditor import CKEditorField
 
 class LoginForm(FlaskForm):
@@ -11,6 +11,16 @@ class LoginForm(FlaskForm):
                                                     Length(min=6, max=16, message='La contraseña tiene que tener entre %(min)d y %(max)d caracteres')])
     remember = BooleanField('remember me')
     enviar = SubmitField('Inicia Sesión')
+    
+class resetPasswordForm(FlaskForm):
+    email = StringField('Escribe el correo', validators=[InputRequired(), Email(message="Esto no es un email valido."), Length(max=60)])
+    enviar = SubmitField('Restablecer Contraseña')
+
+class RequestedResetPasswordForm(FlaskForm):
+    password = PasswordField('Contraseña', validators=[InputRequired(message='Este campo no puede estar vacio'),
+                                                    Length(min=6, max=16, message='La contraseña tiene que tener entre %(min)d y %(max)d caracteres')])
+    password2 = PasswordField('Repite la Contraseña', validators=[DataRequired(), EqualTo('password', message='Las contraseñas deben coincidir')])
+    enviar = SubmitField('Cambiar Contraseña')
 
 class CreateUserForm(FlaskForm):
     email = StringField('Escribe el correo', validators=[InputRequired(), Email(message="Esto no es un email valido."), Length(max=60)])

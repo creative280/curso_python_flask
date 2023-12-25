@@ -2,14 +2,51 @@ from flask import Flask, render_template, request, redirect, url_for, flash
 import json
 import os.path
 from werkzeug.utils import secure_filename
-from app.forms import LoginForm, CreateUserForm
+from app.forms import LoginForm, CreateUserForm, resetPasswordForm, RequestedResetPasswordForm
 from app.models import db, User
-from flask_login import LoginManager, login_user, login_required, logout_user
-from . import app
+from flask_login import LoginManager, login_user, login_required, logout_user, current_user
+from flask_mail import  Message
+from . import app, mail
+from .email import envia_pass_correo
 
 
-@app.route('/home', methods=['GET', 'POST'])
+@app.route('/mail')
+def send_mail():
+    sender = app.config['MAIL_USERNAME'][0]
+    msg = Message('Correo desde la aplicacion flask', sender=sender, recipients=["alejandro.taborda280@gmail.com"])
+    msg.body = 'Estoy enviadno un correo de purbea con el bodu de ejemplo desde mi aplicacion Flask'
+    mail.send(msg)
+    return '<h1>Correo enviado</h1>'
 
+
+@app.route('/reset_password', methods=['GET', 'POST'])
+def reset_pass():
+    if current_user.is_authenticated:
+        return redirect(url_for('auth.dash'))
+    form= resetPasswordForm()
+    if form.validate_on_submit():
+        user = User.query.filter_by(email=form.email.data).first()
+        print(user)
+        if user:
+            envia_pass_correo(user)
+            flash('Revisa el correo electronico para restablecer tu contraseña.')
+            return redirect(url_for('auth.home'))
+    return render_template('reset_password.html', form=form)
+
+@app.route('/reset_password/<token>', methods=['GET', 'POST'])
+def reset_password(token):
+    if current_user.is_authenticated:
+        return redirect(url_for('auth.dash'))
+    user = User.verify_reset_token(token)
+    if not user:
+        return redirect(url_for('auth.home'))
+    form = RequestedResetPasswordForm()
+    if form.validate_on_submit():
+        user.set_password(form.password.data)
+        db.session.commit()
+        flash('Has cambiado la contraseña')
+        return redirect(url_for('auth.home'))
+    return render_template('set_new_password.html', user=user, form=form)
 
 #Pasar variables por una URL
 @app.route('/texto/<string:name>')

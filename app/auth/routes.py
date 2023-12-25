@@ -124,7 +124,8 @@ def create_dir():
 
 @auth.route('/post-table')
 def tablepost():
-    posts = Post.query.all()
+    page = request.args.get('page', 1, type=int)
+    posts = Post.query.order_by(Post.timestamp.desc()).paginate(page=page, per_page=5)
     # posts = Post.query.order_by(Post.id.desc()). limit(2).all()
     return render_template('post-table.html', posts=posts)
 

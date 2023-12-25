@@ -35,4 +35,8 @@
 
 {{ render_form(formi, novalidate=True) }}
 
+<br>
+<p>¿Olvidaste tu contraseña?</p>
+<a href="{{ url_for('reset_pass') }}">Pulsa aqui para restablecerla</a>
+
 {% endblock content %}
