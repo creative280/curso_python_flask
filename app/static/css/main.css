@@ -1,5 +1,5 @@
 .container{
-    max-width: 50%;
+    max-width: 100%;
     padding-top: 30px;
 }
 
@@ -18,4 +18,9 @@ a.navbar-brand{
 .the-user-gravatar{
     margin-top: -8rem;
     width: 10rem;
+}
+
+.back-image{
+    background-image: url('../../auth/static/assets/img/cover-home.jpg');
+    background-position: center;
 }

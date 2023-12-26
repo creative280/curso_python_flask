@@ -22,8 +22,9 @@ def send_mail():
 @app.route('/', methods=['GET', 'POST'])
 def home():
     page = request.args.get('page', 1, type=int)
-    posts = Post.query.order_by(Post.timestamp.desc())
-
+    posts = Post.query.order_by(Post.timestamp.desc()).paginate(page=page, per_page=6)
+    
+    return render_template('index.html', posts=posts)
 
 
 @app.route('/reset_password', methods=['GET', 'POST'])
