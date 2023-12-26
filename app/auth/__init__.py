@@ -2,6 +2,7 @@ from flask import Flask, Blueprint
 from jinja2 import TemplatesNotFound
 
 
+
 auth = Blueprint(
     'auth',
     __name__,

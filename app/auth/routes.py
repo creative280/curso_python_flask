@@ -7,6 +7,7 @@ from app.models import db, User, Post
 from flask_login import LoginManager, login_user, login_required, logout_user, current_user
 from . import auth
 from flask_ckeditor import upload_fail, upload_success
+from .decorators import admin_required
 
 
 basedir = os.path.abspath(os.path.dirname(__file__))
@@ -62,10 +63,13 @@ def home():
 
 @auth.route('/dashboard')
 def dash():
+    page = request.args.get('page', 1, type=int)
     users = User.query.order_by(User.username.asc())
-    posts = Post.query.order_by(Post.id.asc())
+    posts = Post.query.order_by(Post.timestamp.desc()).paginate(page=page, per_page=10)
+    prev = page - 1
+    next = page + 1
     
-    return render_template('dashboard.html', users=users, posts=posts)
+    return render_template('dashboard.html', users=users, posts=posts, prev=prev, next=next)
 
 
 @auth.route('/show')
@@ -171,13 +175,14 @@ def users():
 
 
 @auth.route('/update/<int:id>', methods=['GET', 'POST'])
+@admin_required
 def update(id):
     user_updt = User.query.get_or_404(id)
     if request.method == 'POST':
         user_updt.username = request.form['name']
         try:
             db.session.commit()
-            return redirect('/users')
+            return redirect('/dashboard')
         except:
             return 'No ha funcionado la actualizacion'
     else:
@@ -192,12 +197,13 @@ def post_by_user(username):
     return render_template('user-post.html', user=user, posts=posts)
 
 @auth.route('/delete/<int:id>', methods=['GET', 'POST'])
+@admin_required
 def delte(id):
     user_delete = User.query.get_or_404(id)
     try:
         db.session.delete(user_delete)
         db.session.commit()
-        return redirect('/users')
+        return redirect('/dashboard')
     except:
         return 'No ha funcionado la actualizacion'
 

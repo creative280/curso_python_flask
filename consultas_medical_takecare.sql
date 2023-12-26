@@ -11,6 +11,9 @@
     password VARCHAR(80),
 );
 
+ALTER TABLE user
+ADD COLUMN is_admin BOOLEAN DEFAULT 0;
+
 
 ALTER TABLE user
 CHANGE firtname firstname VARCHAR(120);
@@ -47,3 +50,7 @@ ALTER TABLE user MODIFY COLUMN password VARCHAR(255);
 
 ALTER TABLE post
 MODIFY COLUMN id INT AUTO_INCREMENT PRIMARY KEY;
+
+UPDATE user
+SET is_admin = 1
+WHERE id = 16;

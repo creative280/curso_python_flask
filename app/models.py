@@ -23,6 +23,7 @@ class User(UserMixin, db.Model):
     city = db.Column(db.String(120))
     email = db.Column(db.String(80), unique=True, nullable=False)
     password = db.Column(db.String(80))
+    is_admin = db.Column(db.Boolean, default = 0)
     post = db.relationship('Post', backref ='author', lazy='dynamic')
 
     def gravatar(self, size):
@@ -30,7 +31,7 @@ class User(UserMixin, db.Model):
         return f'https://www.gravatar.com/avatar/{ digest }?s={size}'
 
     def __repr__(self):
-        return f'{self.id, self.username, self.email}'
+        return f'{self.id, self.username, self.email, self.is_admin}'
 
     def set_password(self, password):
         self.password = generate_password_hash(password)
