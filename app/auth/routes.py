@@ -44,7 +44,7 @@ def upload():
     return upload_success(url, filename=f.filename)  # return upload_success call
 
 
-@auth.route('/', methods=['GET', 'POST'])
+@auth.route('/form', methods=['GET', 'POST'])
 def home():
     login = LoginForm()
 

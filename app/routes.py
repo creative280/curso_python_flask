@@ -3,7 +3,7 @@ import json
 import os.path
 from werkzeug.utils import secure_filename
 from app.forms import LoginForm, CreateUserForm, resetPasswordForm, RequestedResetPasswordForm
-from app.models import db, User
+from app.models import db, User, Post
 from flask_login import LoginManager, login_user, login_required, logout_user, current_user
 from flask_mail import  Message
 from . import app, mail
@@ -17,6 +17,13 @@ def send_mail():
     msg.body = 'Estoy enviadno un correo de purbea con el bodu de ejemplo desde mi aplicacion Flask'
     mail.send(msg)
     return '<h1>Correo enviado</h1>'
+
+@app.route('/home', methods=['GET', 'POST'])
+@app.route('/', methods=['GET', 'POST'])
+def home():
+    page = request.args.get('page', 1, type=int)
+    posts = Post.query.order_by(Post.timestamp.desc())
+
 
 
 @app.route('/reset_password', methods=['GET', 'POST'])
