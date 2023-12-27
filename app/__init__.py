@@ -10,11 +10,12 @@ from flask_login import LoginManager, login_user, login_required, logout_user
 from dotenv import load_dotenv
 from flask_ckeditor import CKEditor
 from flask_mail import Mail
+from flask_marshmallow import Marshmallow
 
 load_dotenv('../.flaskenv')
 
 app = Flask(__name__)
-
+ma = Marshmallow(app)
 app.secret_key = '4l3j0T190516'
 
 app.config["SQLALCHEMY_DATABASE_URI"] = "mysql://root:123456@localhost/flask_project"
@@ -48,8 +49,10 @@ if __name__ == '__main__':
     app.run(debug=True)
 
 from .auth import auth
-
 app.register_blueprint(auth)
+
+from .api import api
+app.register_blueprint(api)
 
 from . import routes
 

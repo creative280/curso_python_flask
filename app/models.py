@@ -6,12 +6,38 @@ import urllib, hashlib
 import jwt
 from time import time
 import secrets, string
+from flask_marshmallow import Marshmallow
 
 db = SQLAlchemy()
+ma = Marshmallow()
 
 alphabet = string.ascii_letters + string.digits + string.punctuation
 password = ''.join(secrets.choice(alphabet) for i in range(64))
- 
+
+
+class Course(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    coursename = db.Column(db.String(80), unique=True, nullable=False)
+    hours = db.Column(db.String(80))
+    tutor_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+
+    def __init__(self, coursename, hours, tutor_id):
+        self.coursename = coursename
+        self.hours = hours
+        self.tutor_id = tutor_id                
+
+    def __repr__(self):
+        return f'{self.coursename, self.hours, self.tutor_id, self.id}'
+    
+
+class CourseSchema(ma.Schema):
+    class Meta:
+        fields = ('id', 'coursename', 'hours', 'tutor_id')
+
+course_schema = CourseSchema()
+courses_schema = CourseSchema(many=True)
+
+
 class User(UserMixin, db.Model):
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(80), unique=True, nullable=False)
@@ -25,6 +51,7 @@ class User(UserMixin, db.Model):
     password = db.Column(db.String(80))
     is_admin = db.Column(db.Boolean, default = 0)
     post = db.relationship('Post', backref ='author', lazy='dynamic')
+    courses = db.relationship('Course', backref='tutor', lazy='dynamic')
 
     def gravatar(self, size):
         digest = hashlib.md5(self.email.lower().encode('utf-8')).hexdigest()
@@ -49,6 +76,7 @@ class User(UserMixin, db.Model):
         except:
             return
         return User.query.get(id)    
+
 
 class Post(db.Model):
     id = db.Column(db.Integer, primary_key=True)

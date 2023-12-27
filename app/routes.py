@@ -1,13 +1,63 @@
-from flask import Flask, render_template, request, redirect, url_for, flash
+from flask import Flask, render_template, request, redirect, url_for, flash, jsonify
 import json
 import os.path
 from werkzeug.utils import secure_filename
 from app.forms import LoginForm, CreateUserForm, resetPasswordForm, RequestedResetPasswordForm
-from app.models import db, User, Post
+from app.models import db, User, Post, Course, courses_schema, course_schema
 from flask_login import LoginManager, login_user, login_required, logout_user, current_user
 from flask_mail import  Message
 from . import app, mail
 from .email import envia_pass_correo
+
+
+@app.route('/get_course')
+def get_course():
+    all_course = Course.query.all()
+    result = courses_schema.dump(all_course)
+    return jsonify(result)
+
+@app.route('/get_course/<int:id>')
+def get_single_course(id):
+    all_course = Course.query.get(id)
+    result = course_schema.dump(all_course)
+    return jsonify(result)
+
+
+@app.route('/add_course', methods=['POST'])
+def add_course():
+    coursename = request.json['coursename']
+    hours = request.json['hours']
+    tutor_id = request.json['tutor_id']
+
+    my_course = Course(coursename, hours, tutor_id)
+    db.session.add(my_course)
+    db.session.commit()
+
+    return course_schema.jsonify(my_course)
+
+
+@app.route('/course_update/<int:id>', methods=['PUT'])
+def course_update(id):
+    course = Course.query.get(id)
+
+    coursename = request.json['coursename']
+    hours = request.json['hours']
+    tutor_id = request.json['tutor_id']
+
+    course.coursename = coursename
+    course.hours = hours
+    course.tutor_id = tutor_id
+
+    db.session.commit()
+    return course_schema.jsonify(course)
+
+
+@app.route('/course_delete/<int:id>', methods=['DELETE'])
+def course_delete(id):
+    course = Course.query.get(id)
+    db.session.delete(course)
+    db.session.commit()
+    return course_schema.jsonify(course)
 
 
 @app.route('/mail')
@@ -17,6 +67,7 @@ def send_mail():
     msg.body = 'Estoy enviadno un correo de purbea con el bodu de ejemplo desde mi aplicacion Flask'
     mail.send(msg)
     return '<h1>Correo enviado</h1>'
+
 
 @app.route('/home', methods=['GET', 'POST'])
 @app.route('/', methods=['GET', 'POST'])
@@ -41,6 +92,7 @@ def reset_pass():
             return redirect(url_for('auth.home'))
     return render_template('reset_password.html', form=form)
 
+
 @app.route('/reset_password/<token>', methods=['GET', 'POST'])
 def reset_password(token):
     if current_user.is_authenticated:
@@ -56,14 +108,17 @@ def reset_password(token):
         return redirect(url_for('auth.home'))
     return render_template('set_new_password.html', user=user, form=form)
 
+
 #Pasar variables por una URL
 @app.route('/texto/<string:name>')
 def texto(name):
     return f"hola {name}, Bienvenido a una prueba de variables por URL"
 
+
 @app.route('/form')
 def form():
     return render_template('form.html')
+
 
 @app.route('/dinamic', methods=['GET', 'POST'])
 def dinamic():
@@ -107,7 +162,8 @@ def dinamic():
         return render_template('dinamic.html', nombre=request.form['code'])
     else:
         return redirect(url_for('home'))
-    
+
+
 @app.route('/<string:code>')
 def redirect_to(code):
     if os.path.exists('urls.json'):

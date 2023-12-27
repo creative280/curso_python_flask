@@ -8,8 +8,19 @@
     number VARCHAR(80),
     city VARCHAR(120),
     email VARCHAR(80) UNIQUE NOT NULL,
-    password VARCHAR(80),
+    password VARCHAR(255),
+    is_admin BOOLEAN DEFAULT 0
 );
+
+
+CREATE TABLE course (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    coursename VARCHAR(80) UNIQUE NOT NULL,
+    hours VARCHAR(80),
+    tutor_id INT,
+    FOREIGN KEY (tutor_id) REFERENCES user(id)
+);
+
 
 ALTER TABLE user
 ADD COLUMN is_admin BOOLEAN DEFAULT 0;
@@ -43,6 +54,7 @@ INSERT INTO post (id, title, body, timestamp, user_id) VALUES (6, 'Sexto Post', 
 
 
 SELECT * FROM user;
+SELECT * FROM course;
 
 SELECT * FROM post;
 
@@ -53,4 +65,34 @@ MODIFY COLUMN id INT AUTO_INCREMENT PRIMARY KEY;
 
 UPDATE user
 SET is_admin = 1
-WHERE id = 16;
+WHERE id = 1;
+
+
+
+
+----------------------------------------------
+
+
+CREATE TABLE User (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    username VARCHAR(80) UNIQUE NOT NULL,
+    firstname VARCHAR(120),
+    lastname VARCHAR(120),
+    birth DATETIME,
+    address VARCHAR(120),
+    number VARCHAR(80),
+    city VARCHAR(120),
+    email VARCHAR(80) UNIQUE NOT NULL,
+    password VARCHAR(255),
+    is_admin BOOLEAN DEFAULT 0
+);
+
+CREATE TABLE Post (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    title VARCHAR(120),
+    body VARCHAR(500),
+    timestamp DATETIME DEFAULT CURRENT_TIMESTAMP,
+    thumb VARCHAR(255),
+    user_id INT,
+    CONSTRAINT fk_post_user FOREIGN KEY (user_id) REFERENCES User(id)
+);
